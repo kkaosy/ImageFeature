@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import base64
-from code import getHog
+from app.code import getHog
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,7 +20,9 @@ def read_root():
     return {"message": "Hello, FastAPI!"}
 
 @app.get("/api/getHog")
-def read_str(item_str):
+async def read_str(data: Request):
+    json = await data.json()
+    item_str = json["img"]
     img = readB64(item_str)
     hog = getHog(img)
     return {"message":hog}

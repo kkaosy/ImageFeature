@@ -1,15 +1,14 @@
 FROM python:3.11.0
 
-WORKDIR /app
+WORKDIR /hog
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+COPY ./requirements.txt /hog/requirements.txt
+RUN pip install --no-cache-dir -r /hog/requirements.txt
 
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
-COPY app /app
+COPY ./app /hog/app
 
-EXPOSE 8080
+ENV PYTHONPATH "${PYTHONPATH}:/hog"
 
-CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port","8080" ]
+CMD [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port","80" ]
